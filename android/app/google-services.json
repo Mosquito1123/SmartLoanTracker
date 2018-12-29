@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "367740545857",
+    "firebase_url": "https://hfirestore.firebaseio.com",
+    "project_id": "hfirestore",
+    "storage_bucket": "hfirestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367740545857:android:aec24c6818423a9f",
+        "android_client_info": {
+          "package_name": "com.har.loantrackerflt.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367740545857-m2dfge1fh163uinf11cga6eakj3l3lvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARarpe3ZoqDjjFCouT3eHa6QfQGtmCZh4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
