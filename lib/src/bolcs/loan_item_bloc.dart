@@ -7,6 +7,8 @@ export './bloc_provider.dart';
 import '../models/loan_item.dart';
 export '../models/loan_item.dart';
 
+import '../shared/date_formatter.dart';
+
 class UpdateLoanField {
   final LoanFieldKey key;
   final String value;
@@ -39,7 +41,7 @@ class LoanItemBloc implements BlocBase {
   PublishSubject<int> _termSubject = PublishSubject<int>();
   Stream<int> get term => _termSubject.stream;
 
-  PublishSubject<DateTime> _startDateSubject = PublishSubject<DateTime>();
+  BehaviorSubject<DateTime> _startDateSubject = BehaviorSubject<DateTime>();
   Stream<DateTime> get startDate => _startDateSubject.stream;
 
   // actions to update data
@@ -130,7 +132,7 @@ class LoanItemBloc implements BlocBase {
         currentSubject.sink.add(double.tryParse(action.value));
         break;
       case LoanFieldKey.startDate:
-        currentSubject.sink.add(DateTime.tryParse(action.value));
+        currentSubject.sink.add(DateFormatter.parseDateM(action.value));
         break;
       case LoanFieldKey.term:
         currentSubject.sink.add(int.tryParse(action.value));

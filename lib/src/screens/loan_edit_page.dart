@@ -4,6 +4,8 @@ import '../bolcs/loan_items_bloc.dart';
 import '../bolcs/loan_item_bloc.dart';
 import '../widgets/side_drawer.dart';
 
+import '../shared/date_formatter.dart';
+
 class LoanEditPage extends StatefulWidget {
   final LoanItem loanItem;
   LoanEditPage(this.loanItem) {
@@ -34,7 +36,8 @@ class _LoanEditPageState extends State<LoanEditPage> {
     amountCtrl = TextEditingController(text: loanItem.amount.toString());
     roiCtrl = TextEditingController(text: loanItem.roi.toString());
     termCtrl = TextEditingController(text: loanItem.term.toString());
-    startDateCtrl = TextEditingController(text: loanItem.startDate.toString());
+    startDateCtrl = TextEditingController(
+        text: DateFormatter.formatDateM(loanItem.startDate));
     emiCtrl = TextEditingController(text: loanItem.emi.toString());
     emiPaidCtrl = TextEditingController(text: loanItem.emiPaid.toString());
     loanItemBloc = LoanItemBloc(loanItem: loanItem);
@@ -116,18 +119,39 @@ class _LoanEditPageState extends State<LoanEditPage> {
           ),
     );
 
+    Future _selectStartDate(date) async {
+      final DateTime currentDate = DateTime.now();
+      DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: date ?? currentDate,
+        firstDate: new DateTime(2000),
+        lastDate: new DateTime(currentDate.year + 10),
+      );
+      if (picked != null) {
+        final stringDate = DateFormatter.formatDateM(picked);
+        loanItemBloc?.loanItemAction(UpdateLoanField(
+          key: LoanFieldKey.startDate,
+          value: stringDate,
+        ));
+        startDateCtrl.text = stringDate;
+      }
+    }
+
     final Widget _buildStartDateField = StreamBuilder(
       stream: loanItemBloc.startDate,
       builder: (BuildContext context, AsyncSnapshot<DateTime> snapshot) =>
-          TextField(
-            controller: startDateCtrl,
-            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
-                  key: LoanFieldKey.startDate,
-                  value: value,
-                )),
-            decoration: InputDecoration(
-              labelText: 'StartDate',
-              errorText: snapshot?.error,
+          GestureDetector(
+            onTap: () {
+              _selectStartDate(loanItem.startDate);
+            },
+            child: AbsorbPointer(
+              child: TextField(
+                controller: startDateCtrl,
+                decoration: InputDecoration(
+                  labelText: 'StartDate',
+                  errorText: snapshot?.error,
+                ),
+              ),
             ),
           ),
     );
