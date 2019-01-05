@@ -15,7 +15,13 @@ class LoanEditPage extends StatefulWidget {
 
 class _LoanEditPageState extends State<LoanEditPage> {
   LoanItemBloc loanItemBloc;
-  TextEditingController titleCtrl;
+  TextEditingController titleCtrl,
+      amountCtrl,
+      roiCtrl,
+      termCtrl,
+      startDateCtrl,
+      emiCtrl,
+      emiPaidCtrl;
 
   final LoanItem loanItem;
   _LoanEditPageState(this.loanItem);
@@ -25,6 +31,12 @@ class _LoanEditPageState extends State<LoanEditPage> {
     super.initState();
     print('state init');
     titleCtrl = TextEditingController(text: loanItem.title);
+    amountCtrl = TextEditingController(text: loanItem.amount.toString());
+    roiCtrl = TextEditingController(text: loanItem.roi.toString());
+    termCtrl = TextEditingController(text: loanItem.term.toString());
+    startDateCtrl = TextEditingController(text: loanItem.startDate.toString());
+    emiCtrl = TextEditingController(text: loanItem.emi.toString());
+    emiPaidCtrl = TextEditingController(text: loanItem.emiPaid.toString());
     loanItemBloc = LoanItemBloc(loanItem: loanItem);
   }
 
@@ -46,15 +58,122 @@ class _LoanEditPageState extends State<LoanEditPage> {
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
           TextField(
             controller: titleCtrl,
-            onChanged: loanItemBloc?.updateTitle,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.title,
+                  value: value,
+                )),
             decoration: InputDecoration(
               labelText: 'Title',
               errorText: snapshot?.error,
             ),
           ),
     );
+
+    final Widget _buildAmountField = StreamBuilder(
+      stream: loanItemBloc.amount,
+      builder: (BuildContext context, AsyncSnapshot<double> snapshot) =>
+          TextField(
+            controller: amountCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.amount,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'Amount',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
+    final Widget _buildInterestRateField = StreamBuilder(
+      stream: loanItemBloc.roi,
+      builder: (BuildContext context, AsyncSnapshot<double> snapshot) =>
+          TextField(
+            controller: roiCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.roi,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'InterestRate',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
+    final Widget _buildTermField = StreamBuilder(
+      stream: loanItemBloc.term,
+      builder: (BuildContext context, AsyncSnapshot<int> snapshot) => TextField(
+            controller: termCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.term,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'Term',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
+    final Widget _buildStartDateField = StreamBuilder(
+      stream: loanItemBloc.startDate,
+      builder: (BuildContext context, AsyncSnapshot<DateTime> snapshot) =>
+          TextField(
+            controller: startDateCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.startDate,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'StartDate',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
+    final Widget _buildActualEMIField = StreamBuilder(
+      stream: loanItemBloc.emi,
+      builder: (BuildContext context, AsyncSnapshot<double> snapshot) =>
+          TextField(
+            controller: emiCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.emi,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'ActualEMI',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
+    final Widget _buildPaidEMIField = StreamBuilder(
+      stream: loanItemBloc.emiPaid,
+      builder: (BuildContext context, AsyncSnapshot<double> snapshot) =>
+          TextField(
+            controller: emiPaidCtrl,
+            onChanged: (value) => loanItemBloc?.loanItemAction(UpdateLoanField(
+                  key: LoanFieldKey.emiPaid,
+                  value: value,
+                )),
+            decoration: InputDecoration(
+              labelText: 'PaidEMI',
+              errorText: snapshot?.error,
+            ),
+          ),
+    );
+
     return ListView(
-      children: <Widget>[_buildTitleField],
+      children: <Widget>[
+        _buildTitleField,
+        _buildAmountField,
+        _buildInterestRateField,
+        _buildTermField,
+        _buildStartDateField,
+        _buildActualEMIField,
+        _buildPaidEMIField,
+      ],
     );
   }
 
