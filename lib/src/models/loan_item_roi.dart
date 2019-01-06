@@ -6,16 +6,16 @@ enum LoanRoiFieldKey {
   startDate,
 }
 
-class LoanItemRoi {
+class LoanRoi {
   double roi;
   String id;
   DateTime startDate;
   final DocumentReference reference;
 
-  LoanItemRoi.fromDocSnapshot(DocumentSnapshot document)
+  LoanRoi.fromDocSnapshot(DocumentSnapshot document)
       : this.fromMap(document.data, reference: document.reference);
 
-  LoanItemRoi.fromMap(Map<String, dynamic> map, {this.reference}) {
+  LoanRoi.fromMap(Map<String, dynamic> map, {this.reference}) {
     id = map['id'];
     roi = map['roi'].toDouble();
     startDate = DateTime.fromMillisecondsSinceEpoch(map['startDate']);

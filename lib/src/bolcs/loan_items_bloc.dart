@@ -29,6 +29,7 @@ class LoanItemsBloc implements BlocBase {
 
   @override
   void dispose() {
+    print('disposing:LoanItems bloc');
     _currentLoanCtrl.close();
   }
 }

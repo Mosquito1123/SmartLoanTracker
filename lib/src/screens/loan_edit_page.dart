@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../bolcs/loan_items_bloc.dart';
 import '../bolcs/loan_item_bloc.dart';
+import '../bolcs/loan_amounts_bloc.dart';
+import '../bolcs/loan_rois_bloc.dart';
+
 import '../widgets/side_drawer.dart';
 import '../widgets/loan_item_form.dart';
+import '../widgets/loan_amount_list.dart';
+import '../widgets/loan_roi_list.dart';
 
 class LoanEditPage extends StatelessWidget {
   final LoanItem loanItem;
@@ -27,14 +32,21 @@ class LoanEditPage extends StatelessWidget {
           ),
         ),
         body: BlocProvider(
-            bloc: LoanItemBloc(loanItem: loanItem),
-            child: TabBarView(
-              children: <Widget>[
-                LoanItemForm(loanItem: loanItem),
-                Icon(Icons.announcement),
-                Icon(Icons.apps),
-              ],
-            )),
+          bloc: LoanItemBloc(loanItem: loanItem),
+          child: BlocProvider(
+            bloc: LoanRoisBloc(loanItem: loanItem),
+            child: BlocProvider(
+              bloc: LoanAmountsBloc(loanItem: loanItem),
+              child: TabBarView(
+                children: <Widget>[
+                  LoanItemForm(loanItem: loanItem),
+                  LoanRoiList(),
+                  LoanAmountList(),
+                ],
+              ),
+            ),
+          ),
+        ),
         drawer: SideDrawer(),
       ),
     );

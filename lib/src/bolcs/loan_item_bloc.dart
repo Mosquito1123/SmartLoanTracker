@@ -185,6 +185,7 @@ class LoanItemBloc implements BlocBase {
 
   @override
   void dispose() {
+    print('disposing:LoanItem bloc');
     _actionsSubject.close();
     _currentLoanCtrl.close();
     _fieldSubjectMap.forEach((_, stream) => stream.close());

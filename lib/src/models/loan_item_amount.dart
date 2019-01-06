@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../shared/date_formatter.dart';
 
 enum LoanAmountFieldKey {
   id,
@@ -6,19 +7,19 @@ enum LoanAmountFieldKey {
   date,
 }
 
-class LoanItemAmount {
+class LoanAmount {
   double amount;
   String id;
   DateTime date;
   final DocumentReference reference;
 
-  LoanItemAmount.fromDocSnapshot(DocumentSnapshot document)
+  LoanAmount.fromDocSnapshot(DocumentSnapshot document)
       : this.fromMap(document.data, reference: document.reference);
 
-  LoanItemAmount.fromMap(Map<String, dynamic> map, {this.reference}) {
+  LoanAmount.fromMap(Map<String, dynamic> map, {this.reference}) {
     id = map['id'];
     amount = map['amount'].toDouble();
-    date = DateTime.tryParse(map['date']);
+    date = DateFormatter.parseDateWithFormat(map['date'], 'y-M-d');
   }
 
   dynamic getValue(LoanAmountFieldKey key) {

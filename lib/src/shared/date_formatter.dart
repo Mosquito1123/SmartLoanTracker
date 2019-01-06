@@ -50,6 +50,11 @@ class DateFormatter {
     return formatter.parse(date);
   }
 
+  static DateTime parseDateWithFormat(String date, String format) {
+    final formatter = DateFormat(format);
+    return formatter.parse(date);
+  }
+
   static String formatDays(DateTime date) {
     final today = DateTime.now();
     final resetToday = DateTime.utc(today.year, today.month, today.day);
