@@ -41,8 +41,9 @@ class LoanItemBloc implements BlocBase {
   PublishSubject<int> _termSubject = PublishSubject<int>();
   Stream<int> get term => _termSubject.stream;
 
-  BehaviorSubject<DateTime> _startDateSubject = BehaviorSubject<DateTime>();
+  BehaviorSubject<DateTime> _startDateSubject;
   Stream<DateTime> get startDate => _startDateSubject.stream;
+  DateTime get startDateValue => _startDateSubject.value;
 
   // actions to update data
   PublishSubject _actionsSubject = PublishSubject();
@@ -58,7 +59,9 @@ class LoanItemBloc implements BlocBase {
 
   final LoanItem loanItem;
   LoanItemBloc({this.loanItem})
-      : _currentLoanCtrl = BehaviorSubject<LoanItem>(seedValue: loanItem) {
+      : _currentLoanCtrl = BehaviorSubject<LoanItem>(seedValue: loanItem),
+        _startDateSubject =
+            BehaviorSubject<DateTime>(seedValue: loanItem.startDate) {
     _setupActionsListener();
     _setupFieldStreamMap();
     _setupFieldListeners();
