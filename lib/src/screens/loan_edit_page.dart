@@ -30,7 +30,7 @@ class LoanEditPage extends StatelessWidget {
             bloc: LoanItemBloc(loanItem: loanItem),
             child: TabBarView(
               children: <Widget>[
-                LoanItemForm(),
+                LoanItemForm(loanItem: loanItem),
                 Icon(Icons.announcement),
                 Icon(Icons.apps),
               ],

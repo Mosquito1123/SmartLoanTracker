@@ -5,7 +5,16 @@ import '../bolcs/loan_item_bloc.dart';
 
 import '../shared/date_formatter.dart';
 
-class LoanItemForm extends StatelessWidget {
+class LoanItemForm extends StatefulWidget {
+  final LoanItem loanItem;
+
+  LoanItemForm({this.loanItem});
+
+  @override
+  _LoanItemFormState createState() => _LoanItemFormState();
+}
+
+class _LoanItemFormState extends State<LoanItemForm> {
   TextEditingController titleCtrl,
       amountCtrl,
       roiCtrl,
@@ -15,22 +24,23 @@ class LoanItemForm extends StatelessWidget {
       emiPaidCtrl;
   LoanItemBloc loanItemBloc;
 
-  _init(LoanItem loanItem) {
-    print('building LoanEditPage');
-    titleCtrl = TextEditingController(text: loanItem.title);
-    amountCtrl = TextEditingController(text: loanItem.amount.toString());
-    roiCtrl = TextEditingController(text: loanItem.roi.toString());
-    termCtrl = TextEditingController(text: loanItem.term.toString());
+  @override
+  void initState() {
+    super.initState();
+    titleCtrl = TextEditingController(text: widget.loanItem.title);
+    amountCtrl = TextEditingController(text: widget.loanItem.amount.toString());
+    roiCtrl = TextEditingController(text: widget.loanItem.roi.toString());
+    termCtrl = TextEditingController(text: widget.loanItem.term.toString());
     startDateCtrl = TextEditingController(
-        text: DateFormatter.formatDateM(loanItem.startDate));
-    emiCtrl = TextEditingController(text: loanItem.emi.toString());
-    emiPaidCtrl = TextEditingController(text: loanItem.emiPaid.toString());
+        text: DateFormatter.formatDateM(widget.loanItem.startDate));
+    emiCtrl = TextEditingController(text: widget.loanItem.emi.toString());
+    emiPaidCtrl =
+        TextEditingController(text: widget.loanItem.emiPaid.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     loanItemBloc = BlocProvider.of(context);
-    _init(loanItemBloc.loanItem);
     return _buildLoanForm(context);
   }
 
