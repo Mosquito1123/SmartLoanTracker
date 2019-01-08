@@ -9,7 +9,7 @@ import '../models/loan_item_roi.dart';
 export '../models/loan_item_roi.dart';
 
 class LoanRoisBloc implements BlocBase {
-  BehaviorSubject<LoanRoi> _currentLoanRoiCtrl = BehaviorSubject<LoanRoi>();
+  PublishSubject<LoanRoi> _currentLoanRoiCtrl = PublishSubject<LoanRoi>();
   // BehaviorSubject<List<LoanRoi>> _loanRoisListCtrl = BehaviorSubject<List<LoanRoi>>();
 
   DocumentReference _fireStore =
@@ -24,12 +24,27 @@ class LoanRoisBloc implements BlocBase {
           .map((DocumentSnapshot document) => LoanRoi.fromDocSnapshot(document))
           .toList());
 
-  LoanRoi get currentLoanRoiValue => _currentLoanRoiCtrl.value;
+  // LoanRoi get currentLoanRoiValue => _currentLoanRoiCtrl.value;
   Stream<LoanRoi> get currentLoanRoi => _currentLoanRoiCtrl.stream;
   Function(LoanRoi) get updateCurrentLoanRoi => _currentLoanRoiCtrl.sink.add;
 
   final LoanItem loanItem;
   LoanRoisBloc({@required this.loanItem});
+
+  Future<void> deleteRoi(LoanRoi loanRoi) {
+    return loanRoi.reference?.delete();
+  }
+
+  Future<DocumentReference> undoDeleteRoi(LoanRoi loanRoi) {
+    return _fireStore
+        .collection('loans')
+        .document(loanItem.reference.documentID)
+        .collection('rois')
+        .add({
+      'roi': loanRoi.roi,
+      'startDate': loanRoi.startDate.millisecondsSinceEpoch,
+    });
+  }
 
   @override
   void dispose() {
