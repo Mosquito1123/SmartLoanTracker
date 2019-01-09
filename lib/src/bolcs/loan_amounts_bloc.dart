@@ -9,9 +9,9 @@ import '../models/loan_item_amount.dart';
 export '../models/loan_item_amount.dart';
 
 class LoanAmountsBloc implements BlocBase {
-  BehaviorSubject<LoanAmount> _currentLoanAmountCtrl =
-      BehaviorSubject<LoanAmount>();
-  // BehaviorSubject<List<LoanItemAmount>> _loansListCtrl = BehaviorSubject<List<LoanItemAmount>>();
+  PublishSubject<LoanAmount> _currentLoanAmountCtrl =
+      PublishSubject<LoanAmount>();
+  // BehaviorSubject<List<LoanAmount>> _loanAmountsListCtrl = BehaviorSubject<List<LoanAmount>>();
 
   DocumentReference _fireStore =
       Firestore.instance.collection('loan-tracker').document('LoanTrackerDoc');
@@ -26,7 +26,7 @@ class LoanAmountsBloc implements BlocBase {
               LoanAmount.fromDocSnapshot(document))
           .toList());
 
-  LoanAmount get currentLoanAmountValue => _currentLoanAmountCtrl.value;
+  // LoanAmount get currentLoanAmountValue => _currentLoanAmountCtrl.value;
   Stream<LoanAmount> get currentLoanAmount => _currentLoanAmountCtrl.stream;
   Function(LoanAmount) get updateCurrentLoanAmount =>
       _currentLoanAmountCtrl.sink.add;
@@ -34,9 +34,24 @@ class LoanAmountsBloc implements BlocBase {
   final LoanItem loanItem;
   LoanAmountsBloc({@required this.loanItem});
 
+  Future<void> deleteRoi(LoanAmount loanAmount) {
+    return loanAmount.reference?.delete();
+  }
+
+  Future<DocumentReference> undoDeleteRoi(LoanAmount loanAmount) {
+    return _fireStore
+        .collection('loans')
+        .document(loanItem.reference.documentID)
+        .collection('amounts')
+        .add({
+      'roi': loanAmount.amount,
+      'startDate': loanAmount.date.millisecondsSinceEpoch,
+    });
+  }
+
   @override
   void dispose() {
-    print('disposing:Amounts bloc');
+    print('disposing:ROIs bloc');
     _currentLoanAmountCtrl.close();
   }
 }

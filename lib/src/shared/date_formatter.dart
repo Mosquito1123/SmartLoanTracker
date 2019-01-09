@@ -3,6 +3,20 @@ import 'package:intl/intl.dart';
 class DateFormatter {
   DateFormatter._();
 
+  static String formatFullWithFormat(DateTime date, String format) {
+    final formatter = DateFormat(format);
+
+    return formatter.format(date);
+  }
+
+  static String safeFormatWithFormat(DateTime date, String format) {
+    if (date == null) {
+      return 'Not assigned';
+    }
+
+    return formatFullWithFormat(date, format);
+  }
+
   static String formatFullWithTime(DateTime date) {
     final formatter = DateFormat('H:mm - EEEE, d.MMM.y');
 

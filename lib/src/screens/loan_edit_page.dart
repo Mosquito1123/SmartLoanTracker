@@ -47,7 +47,7 @@ class LoanEditPage extends StatelessWidget {
             ),
           ),
         ),
-        drawer: SideDrawer(),
+        // drawer: SideDrawer(),
       ),
     );
   }

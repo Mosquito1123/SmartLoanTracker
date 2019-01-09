@@ -8,6 +8,8 @@ enum LoanAmountFieldKey {
 }
 
 class LoanAmount {
+  static const String dateFormat = 'y-M-d';
+
   double amount;
   String id;
   DateTime date;
@@ -19,7 +21,7 @@ class LoanAmount {
   LoanAmount.fromMap(Map<String, dynamic> map, {this.reference}) {
     id = map['id'];
     amount = map['amount'].toDouble();
-    date = DateFormatter.parseDateWithFormat(map['date'], 'y-M-d');
+    date = DateFormatter.parseDateWithFormat(map['date'], dateFormat);
   }
 
   dynamic getValue(LoanAmountFieldKey key) {
