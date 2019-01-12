@@ -8,16 +8,12 @@ class DateCalculations {
     final int subMonths = (months % DateTime.monthsPerYear);
     final DateTime date =
         DateTime.utc(srcDate.year, srcDate.month - months, srcDate.day);
-    // final DateTime date = DateTime.utc(
-    //     srcDate.year - subYears, srcDate.month - subMonths, srcDate.day);
-    print(date);
+    // print(date);
     int toMonth = (srcDate.month - subMonths) % DateTime.monthsPerYear;
     if (toMonth == 0) toMonth = 12;
-    print(toMonth);
+    // print(toMonth);
 
     if (date.month > toMonth) return date.subtract(Duration(days: date.day));
-    // if (srcDate.month == date.month)
-    //   return date.subtract(Duration(days: date.day));
     return date;
   }
 
