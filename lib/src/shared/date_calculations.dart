@@ -3,8 +3,22 @@ class DateCalculations {
     return DateTime(srcDate.year, DateTime.december, 31);
   }
 
-  static DateTime cloneToPreviousMonth(DateTime srcDate) {
-    return DateTime(srcDate.year, srcDate.month - 1, srcDate.day);
+  static DateTime subtractMonth(DateTime srcDate, [int months = 1]) {
+    // final int subYears = (months / DateTime.monthsPerYear).floor();
+    final int subMonths = (months % DateTime.monthsPerYear);
+    final DateTime date =
+        DateTime.utc(srcDate.year, srcDate.month - months, srcDate.day);
+    // final DateTime date = DateTime.utc(
+    //     srcDate.year - subYears, srcDate.month - subMonths, srcDate.day);
+    print(date);
+    int toMonth = (srcDate.month - subMonths) % DateTime.monthsPerYear;
+    if (toMonth == 0) toMonth = 12;
+    print(toMonth);
+
+    if (date.month > toMonth) return date.subtract(Duration(days: date.day));
+    // if (srcDate.month == date.month)
+    //   return date.subtract(Duration(days: date.day));
+    return date;
   }
 
   static bool isSameDayOrAfter(DateTime srcDate, DateTime destDate) {
