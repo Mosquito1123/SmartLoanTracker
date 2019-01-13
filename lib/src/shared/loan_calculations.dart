@@ -43,7 +43,7 @@ class LoanCalculations {
     return amount;
   }
 
-  List<LoanCalculationSplit> calculateEMISplits([bool byYear = false]) {
+  List<LoanCalculationSplit> calculateEMISplits({bool byYear = false}) {
     final List<LoanCalculationSplit> splits = [];
     double currentROI = loanItem.roi;
     DateTime momentDate = loanItem.startDate;
@@ -112,6 +112,10 @@ class LoanCalculations {
           } else {
             currentSplit.principle += split.principle;
             currentSplit.interest += split.interest;
+            currentSplit.principle =
+                double.parse(currentSplit.principle.toStringAsFixed(2));
+            currentSplit.interest =
+                double.parse(currentSplit.principle.toStringAsFixed(2));
             currentSplit.balancePrinciple = split.balancePrinciple;
             currentSplit.finishedPercent = split.finishedPercent;
           }
@@ -136,7 +140,7 @@ class LoanCalculations {
 
   LoanCalculationSplitsWithStats calculateEMISplitsWithStats(
       [bool byYear = false]) {
-    final splits = calculateEMISplits(byYear);
+    final splits = calculateEMISplits(byYear: byYear);
 
     final stats = LoanCalculationStats(
       total: 0,

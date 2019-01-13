@@ -30,9 +30,17 @@ void main() {
 
   group('EMI Split Calculations Without ROI and Amounts', () {
     List<LoanCalculationSplit> splits;
+    List<LoanCalculationSplit> splitsYears;
     setUp(() {
       splits = loanCalcHeadOnly.calculateEMISplits();
+      print('splits:');
       splits.forEach((split) {
+        print(
+            '${DateFormatter.formatDateM(split.date)} , ${split.interest} , ${split.principle} , ${split.balancePrinciple}, ${split.finishedPercent}%');
+      });
+      splitsYears = loanCalcHeadOnly.calculateEMISplits(byYear: true);
+      print('splits byYear:');
+      splitsYears.forEach((split) {
         print(
             '${DateFormatter.formatDateM(split.date)} , ${split.interest} , ${split.principle} , ${split.balancePrinciple}, ${split.finishedPercent}%');
       });
@@ -44,6 +52,10 @@ void main() {
 
     test('should last split principal be 0', () {
       expect(splits.last.balancePrinciple, 0.0);
+    });
+
+    test('should splits byYear last split finished be 100.0%', () {
+      expect(splitsYears.last.finishedPercent, 100.0);
     });
   });
   group('Fetch Extra Payment Amounts', () {
