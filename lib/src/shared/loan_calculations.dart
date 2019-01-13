@@ -15,22 +15,19 @@ class LoanCalculations {
 
   static double calculateEMI(double amount, double roi, int term) {
     // p * r * ( ((1+r) ^ n) / (((1+r) ^ n) - 1 ))
-
     final double r = roi / 12 / 100;
-
     final double rTmp = pow(1 + r, term);
-
-    return (amount * r * (rTmp / (rTmp - 1)));
+    return double.parse((amount * r * (rTmp / (rTmp - 1))).toStringAsFixed(2));
   }
 
-  double getROIOfMonth(DateTime date) {
+  double getROIOfMonth(DateTime date, double currentROI) {
     try {
       final LoanRoi loanRoi = loanRois?.lastWhere((loanRoi) {
         return DateCalculations.isSameDayOrAfter(date, loanRoi.startDate);
       });
       return loanRoi.roi;
     } catch (excption) {
-      return loanItem.roi;
+      return currentROI;
     }
   }
 
@@ -44,5 +41,154 @@ class LoanCalculations {
       }
     });
     return amount;
+  }
+
+  List<LoanCalculationSplit> calculateEMISplits([bool byYear = false]) {
+    final List<LoanCalculationSplit> splits = [];
+    double currentROI = loanItem.roi;
+    DateTime momentDate = loanItem.startDate;
+    double balancePrinciple = loanItem.amount;
+
+    while (balancePrinciple > 0) {
+      currentROI = getROIOfMonth(momentDate, currentROI);
+
+      double r = (currentROI * 0.00083333); // (roi/12/100)
+
+      final LoanCalculationSplit split = LoanCalculationSplit(
+        date: momentDate,
+        emiPaid: loanItem.emiPaid,
+      );
+
+      double extraAmount = 0;
+      extraAmount = getExtraPaymentsOfMonth(momentDate);
+
+      split.emiPaid += extraAmount;
+
+      split.interest = (balancePrinciple * r);
+
+      if (balancePrinciple + split.interest < split.emiPaid)
+        split.emiPaid = balancePrinciple + split.interest;
+
+      split.principle = split.emiPaid - split.interest;
+      balancePrinciple -= split.principle;
+      split.balancePrinciple = balancePrinciple;
+      split.finishedPercent = (100 - balancePrinciple / loanItem.amount * 100);
+      // split.finishedPercent =
+      //     (10000 - balancePrinciple / loanItem.amount * 10000) / 100;
+
+      split.principle = double.parse(split.principle.toStringAsFixed(2));
+      split.balancePrinciple =
+          double.parse(split.balancePrinciple.toStringAsFixed(2));
+      split.finishedPercent =
+          double.parse(split.finishedPercent.toStringAsFixed(2));
+      split.interest = double.parse(split.interest.toStringAsFixed(2));
+
+      splits.add(split);
+      momentDate = DateCalculations.addMonth(momentDate);
+
+      // console.log(
+      //   moment(split.date).format("MMM YY"),
+      //   currentROI,
+      //   split.principle,
+      //   split.interest,
+      //   split.balancePrinciple,
+      //   split.finishedPercent
+      // );
+    }
+
+    if (byYear) {
+      final List<LoanCalculationSplit> yearSplits = [];
+
+      final mStartDate = loanItem.startDate;
+      DateTime currYearDate = DateCalculations.cloneToEndOfYear(mStartDate);
+
+      LoanCalculationSplit currentSplit;
+
+      splits.forEach((split) {
+        if (currYearDate.year == split.date.year) {
+          if (currentSplit == null) {
+            currentSplit = split.clone();
+            currentSplit.date = currYearDate;
+          } else {
+            currentSplit.principle += split.principle;
+            currentSplit.interest += split.interest;
+            currentSplit.balancePrinciple = split.balancePrinciple;
+            currentSplit.finishedPercent = split.finishedPercent;
+          }
+        } else {
+          currYearDate = DateCalculations.cloneToEndOfYear(split.date);
+          yearSplits.add(currentSplit);
+          // console.log(
+          //   moment(currentSplit.date).format("MMM, YY"),
+          //   currentSplit.principle,
+          //   currentSplit.finishedPercent
+          // );
+          currentSplit = split.clone();
+          currentSplit.date = currYearDate;
+        }
+      });
+      yearSplits.add(currentSplit);
+      return yearSplits;
+    }
+
+    return splits;
+  }
+
+  LoanCalculationSplitsWithStats calculateEMISplitsWithStats(
+      [bool byYear = false]) {
+    final splits = calculateEMISplits(byYear);
+
+    final stats = LoanCalculationStats(
+      total: 0,
+      interest: 0,
+      interestPercent: 0,
+    );
+
+    if (splits != null) {
+      splits.forEach((split) => stats.interest += split.interest);
+      stats.total = loanItem.amount + stats.interest;
+      stats.interestPercent = (stats.interest / stats.total * 1000) / 10;
+    }
+    // console.log("Stats: ", stats.total, stats.interest, stats.interestPercent);
+    return LoanCalculationSplitsWithStats(splits: splits, stats: stats);
+  }
+}
+
+class LoanCalculationSplitsWithStats {
+  List<LoanCalculationSplit> splits;
+  LoanCalculationStats stats;
+  LoanCalculationSplitsWithStats({this.splits, this.stats});
+}
+
+class LoanCalculationStats {
+  double interest, total, interestPercent;
+  LoanCalculationStats({this.interest, this.total, this.interestPercent});
+}
+
+class LoanCalculationSplit {
+  DateTime date;
+  double emiPaid;
+  double principle;
+  double interest;
+  double balancePrinciple;
+  double finishedPercent;
+  LoanCalculationSplit({
+    this.date,
+    this.emiPaid,
+    this.principle = 0.0,
+    this.interest = 0.0,
+    this.balancePrinciple = 0.0,
+    this.finishedPercent = 0.0,
+  });
+
+  LoanCalculationSplit clone() {
+    return LoanCalculationSplit(
+      date: this.date,
+      emiPaid: this.emiPaid,
+      principle: this.principle,
+      interest: this.interest,
+      balancePrinciple: this.balancePrinciple,
+      finishedPercent: this.finishedPercent,
+    );
   }
 }

@@ -3,6 +3,10 @@ class DateCalculations {
     return DateTime(srcDate.year, DateTime.december, 31);
   }
 
+  static DateTime addMonth(DateTime srcDate, [int months = 1]) {
+    return DateTime.utc(srcDate.year, srcDate.month + months, srcDate.day);
+  }
+
   static DateTime subtractMonth(DateTime srcDate, [int months = 1]) {
     // final int subYears = (months / DateTime.monthsPerYear).floor();
     final int subMonths = (months % DateTime.monthsPerYear);

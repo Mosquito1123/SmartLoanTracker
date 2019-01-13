@@ -1,5 +1,7 @@
 import 'package:test/test.dart';
 
+import 'package:loan_tracker_flt/src/shared/date_formatter.dart';
+
 import 'package:loan_tracker_flt/src/models/loan_item.dart';
 import 'package:loan_tracker_flt/src/models/loan_item_amount.dart';
 import 'package:loan_tracker_flt/src/models/loan_item_roi.dart';
@@ -11,6 +13,39 @@ void main() {
       loanCalcNoAmounts,
       loanCalcHeadOnly;
 
+  group('EMI Split Stats Calculations Without ROI and Amounts', () {
+    LoanCalculationSplitsWithStats splitsWithStats;
+    setUp(() {
+      splitsWithStats = loanCalcHeadOnly.calculateEMISplitsWithStats();
+      splitsWithStats.splits.forEach((split) {
+        print(
+            '${DateFormatter.formatDateM(split.date)} , ${split.interest} , ${split.principle} , ${split.balancePrinciple}, ${split.finishedPercent}%');
+      });
+    });
+
+    test('should interest match', () {
+      expect(splitsWithStats.stats.interest, 33224.18);
+    });
+  });
+
+  group('EMI Split Calculations Without ROI and Amounts', () {
+    List<LoanCalculationSplit> splits;
+    setUp(() {
+      splits = loanCalcHeadOnly.calculateEMISplits();
+      splits.forEach((split) {
+        print(
+            '${DateFormatter.formatDateM(split.date)} , ${split.interest} , ${split.principle} , ${split.balancePrinciple}, ${split.finishedPercent}%');
+      });
+    });
+
+    test('should get 120 splits', () {
+      expect(splits.length, 120);
+    });
+
+    test('should last split principal be 0', () {
+      expect(splits.last.balancePrinciple, 0.0);
+    });
+  });
   group('Fetch Extra Payment Amounts', () {
     test('should return 0, when no amounts available', () {
       double resultExpected = 0.0;
@@ -60,14 +95,16 @@ void main() {
     test('should return ROI rate, when roi available (first)', () {
       double resultExpected = loanCalc.loanRois[0].roi;
 
-      double result = loanCalc.getROIOfMonth(DateTime.utc(2016, 01));
+      double result =
+          loanCalc.getROIOfMonth(DateTime.utc(2016, 01), loanCalc.loanItem.roi);
 
       expect(result, resultExpected);
     });
     test('should return ROI rate, when roi available (second)', () {
       double resultExpected = loanCalc.loanRois[1].roi;
 
-      double result = loanCalc.getROIOfMonth(DateTime.utc(2016, 05));
+      double result =
+          loanCalc.getROIOfMonth(DateTime.utc(2016, 05), loanCalc.loanItem.roi);
 
       expect(result, resultExpected);
     });
@@ -75,14 +112,16 @@ void main() {
         () {
       double resultExpected = loanCalc.loanItem.roi;
 
-      double result = loanCalc.getROIOfMonth(DateTime.utc(2015, 08));
+      double result =
+          loanCalc.getROIOfMonth(DateTime.utc(2015, 08), loanCalc.loanItem.roi);
 
       expect(result, resultExpected);
     });
     test('should return loanItem ROI, when no roi items available', () {
       double resultExpected = loanCalcHeadOnly.loanItem.roi;
 
-      double result = loanCalcHeadOnly.getROIOfMonth(DateTime.now());
+      double result =
+          loanCalcHeadOnly.getROIOfMonth(DateTime.now(), loanCalc.loanItem.roi);
 
       expect(result, resultExpected);
     });
@@ -92,8 +131,7 @@ void main() {
     double resultExpected = loanCalc.loanItem.emi;
 
     double result = LoanCalculations.calculateEMI(loanCalc.loanItem.amount,
-            loanCalc.loanItem.roi, loanCalc.loanItem.term)
-        .roundToDouble();
+        loanCalc.loanItem.roi, loanCalc.loanItem.term);
 
     expect(result, resultExpected);
   });
@@ -105,7 +143,8 @@ void main() {
       'amount': 100000.0,
       'roi': 6.0,
       'term': 120,
-      'emi': 1110.0,
+      'emi': 1110.21,
+      'emiPaid': 1110.21,
     });
     final List<LoanRoi> loanRois = [];
     loanRois.add(LoanRoi.fromMap({
