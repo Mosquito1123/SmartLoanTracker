@@ -23,10 +23,26 @@ class LoanCalculations {
     return (amount * r * (rTmp / (rTmp - 1)));
   }
 
-  double _getROIOfMonth(DateTime date, double currentROI) {
-    LoanRoi loanRoi = loanRois.singleWhere((loanRoi) {
-      return DateCalculations.isSameDayOrAfter(date, loanRoi.startDate);
+  double getROIOfMonth(DateTime date) {
+    try {
+      final LoanRoi loanRoi = loanRois?.lastWhere((loanRoi) {
+        return DateCalculations.isSameDayOrAfter(date, loanRoi.startDate);
+      });
+      return loanRoi.roi;
+    } catch (excption) {
+      return loanItem.roi;
+    }
+  }
+
+  double getExtraPaymentsOfMonth(DateTime date) {
+    double amount = 0.0;
+    final monthAgo = DateCalculations.subtractMonth(date);
+    loanAmounts?.forEach((loanAmount) {
+      if (DateCalculations.isBetween(loanAmount.date, monthAgo, date,
+          inclusiveStart: true)) {
+        amount += loanAmount.amount;
+      }
     });
-    return loanRoi.roi;
+    return amount;
   }
 }

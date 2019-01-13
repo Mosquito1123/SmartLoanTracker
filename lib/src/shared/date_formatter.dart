@@ -61,12 +61,12 @@ class DateFormatter {
 
   static DateTime parseDateM(String date) {
     final formatter = DateFormat('d.MMM.y');
-    return formatter.parse(date);
+    return formatter.parse(date, true);
   }
 
   static DateTime parseDateWithFormat(String date, String format) {
     final formatter = DateFormat(format);
-    return formatter.parse(date);
+    return formatter.parse(date, true);
   }
 
   static String formatDays(DateTime date) {

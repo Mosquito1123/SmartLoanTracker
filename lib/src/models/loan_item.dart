@@ -24,8 +24,8 @@ class LoanItem {
   LoanItem.fromMap(Map<String, dynamic> map, {this.reference}) {
     id = map['id'];
     amount = map['amount'].toDouble();
-    emi = map['emi'].toDouble();
-    emiPaid = map['emiPaid'].toDouble();
+    emi = map['emi']?.toDouble();
+    emiPaid = map['emiPaid']?.toDouble();
     roi = map['roi'].toDouble();
     title = map['title'];
     startDate = DateTime.fromMillisecondsSinceEpoch(map['startDate']);
