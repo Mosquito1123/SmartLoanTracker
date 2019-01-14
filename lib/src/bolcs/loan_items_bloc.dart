@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
 import './bloc_provider.dart';
 export './bloc_provider.dart';
@@ -25,7 +26,13 @@ class LoanItemsBloc implements BlocBase {
   Stream<LoanItem> get currentLoanItem => _currentLoanCtrl.stream;
   Function(LoanItem) get updateCurrentLoanItem => _currentLoanCtrl.sink.add;
 
-  LoanItemsBloc() {}
+  LoanItemsBloc() {
+    StreamSubscription listener;
+    listener = loansList.listen((loans) {
+      _currentLoanCtrl.add(loans.first);
+      listener.cancel();
+    });
+  }
 
   @override
   void dispose() {

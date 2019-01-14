@@ -43,14 +43,19 @@ class LoanCalculations {
     return amount;
   }
 
-  List<LoanCalculationSplit> calculateEMISplits({bool byYear = false}) {
+  List<LoanCalculationSplit> calculateEMISplits(
+      {bool byYear = false,
+      bool ignoreRois = false,
+      bool ignoreAmounts = false}) {
+    print('${this.runtimeType}: calculateEMISplits');
     final List<LoanCalculationSplit> splits = [];
     double currentROI = loanItem.roi;
     DateTime momentDate = loanItem.startDate;
     double balancePrinciple = loanItem.amount;
 
     while (balancePrinciple > 0) {
-      currentROI = getROIOfMonth(momentDate, currentROI);
+      currentROI =
+          ignoreRois ? currentROI : getROIOfMonth(momentDate, currentROI);
 
       double r = (currentROI * 0.00083333); // (roi/12/100)
 
@@ -60,7 +65,7 @@ class LoanCalculations {
       );
 
       double extraAmount = 0;
-      extraAmount = getExtraPaymentsOfMonth(momentDate);
+      extraAmount = ignoreAmounts ? 0.0 : getExtraPaymentsOfMonth(momentDate);
 
       split.emiPaid += extraAmount;
 
@@ -86,14 +91,8 @@ class LoanCalculations {
       splits.add(split);
       momentDate = DateCalculations.addMonth(momentDate);
 
-      // console.log(
-      //   moment(split.date).format("MMM YY"),
-      //   currentROI,
-      //   split.principle,
-      //   split.interest,
-      //   split.balancePrinciple,
-      //   split.finishedPercent
-      // );
+      // print(
+      //     '${split.date.year},${split.interest},${split.principle},${split.balancePrinciple},${split.finishedPercent}%');
     }
 
     if (byYear) {
@@ -115,22 +114,21 @@ class LoanCalculations {
             currentSplit.principle =
                 double.parse(currentSplit.principle.toStringAsFixed(2));
             currentSplit.interest =
-                double.parse(currentSplit.principle.toStringAsFixed(2));
+                double.parse(currentSplit.interest.toStringAsFixed(2));
             currentSplit.balancePrinciple = split.balancePrinciple;
             currentSplit.finishedPercent = split.finishedPercent;
           }
         } else {
           currYearDate = DateCalculations.cloneToEndOfYear(split.date);
+          // print(
+          //     '${currentSplit.date.year},${currentSplit.interest},${currentSplit.principle},${currentSplit.balancePrinciple},${currentSplit.finishedPercent}%');
           yearSplits.add(currentSplit);
-          // console.log(
-          //   moment(currentSplit.date).format("MMM, YY"),
-          //   currentSplit.principle,
-          //   currentSplit.finishedPercent
-          // );
           currentSplit = split.clone();
           currentSplit.date = currYearDate;
         }
       });
+      // print(
+      //     '${currentSplit.date.year},${currentSplit.interest},${currentSplit.principle},${currentSplit.balancePrinciple},${currentSplit.finishedPercent}%');
       yearSplits.add(currentSplit);
       return yearSplits;
     }
@@ -139,8 +137,15 @@ class LoanCalculations {
   }
 
   LoanCalculationSplitsWithStats calculateEMISplitsWithStats(
-      [bool byYear = false]) {
-    final splits = calculateEMISplits(byYear: byYear);
+      {bool byYear = false,
+      bool ignoreRois = false,
+      bool ignoreAmounts = false}) {
+    print('${this.runtimeType}: calculateEMISplitsWithStats');
+    final splits = calculateEMISplits(
+      byYear: byYear,
+      ignoreAmounts: ignoreAmounts,
+      ignoreRois: ignoreRois,
+    );
 
     final stats = LoanCalculationStats(
       total: 0,
@@ -149,9 +154,14 @@ class LoanCalculations {
     );
 
     if (splits != null) {
-      splits.forEach((split) => stats.interest += split.interest);
-      stats.total = loanItem.amount + stats.interest;
-      stats.interestPercent = (stats.interest / stats.total * 1000) / 10;
+      splits.forEach((split) {
+        stats.interest += split.interest;
+        stats.interest = double.parse((stats.interest.toStringAsFixed(2)));
+      });
+      stats.total =
+          double.parse((loanItem.amount + stats.interest).toStringAsFixed(2));
+      stats.interestPercent = double.parse(
+          ((stats.interest / stats.total * 1000) / 10).toStringAsFixed(2));
     }
     // console.log("Stats: ", stats.total, stats.interest, stats.interestPercent);
     return LoanCalculationSplitsWithStats(splits: splits, stats: stats);
