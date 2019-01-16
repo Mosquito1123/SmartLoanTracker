@@ -6,6 +6,7 @@ import '../bolcs/loan_item_splits_bloc.dart';
 import '../widgets/side_drawer.dart';
 import '../widgets/loan_stats_card.dart';
 import '../widgets/loan_emi_card.dart';
+import '../widgets/loan_split_list.dart';
 
 class DashboardPage extends StatelessWidget {
   LoanItemSplitsBloc loanSplitsBloc;
@@ -28,11 +29,35 @@ class DashboardPage extends StatelessWidget {
                 children: <Widget>[
                   LoanStatsCard(
                     loanSplitsBloc: loanSplitsBloc,
+                    computed: false,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                  LoanStatsCard(
+                    loanSplitsBloc: loanSplitsBloc,
                     computed: true,
                     positiveColor: Theme.of(context).primaryColor,
                     negativeColor: Theme.of(context).accentColor,
                   ),
                   LoanEmiCard(
+                    loanSplitsBloc: loanSplitsBloc,
+                    computed: false,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                  LoanEmiCard(
+                    loanSplitsBloc: loanSplitsBloc,
+                    computed: true,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                  LoanSplitList(
+                    loanSplitsBloc: loanSplitsBloc,
+                    computed: false,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                  LoanSplitList(
                     loanSplitsBloc: loanSplitsBloc,
                     computed: true,
                     positiveColor: Theme.of(context).primaryColor,
