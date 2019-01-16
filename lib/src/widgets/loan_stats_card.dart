@@ -8,7 +8,13 @@ import './loan_stats_pie_chart.dart';
 class LoanStatsCard extends StatelessWidget {
   final bool computed;
   final LoanItemSplitsBloc loanSplitsBloc;
-  LoanStatsCard({this.computed = false, this.loanSplitsBloc});
+  final Color positiveColor, negativeColor;
+  LoanStatsCard({
+    this.computed = false,
+    this.loanSplitsBloc,
+    this.positiveColor = Colors.green,
+    this.negativeColor = Colors.orange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,7 @@ class LoanStatsCard extends StatelessWidget {
           _buildTitle,
           Padding(
             padding: EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Divider(color: Colors.grey[300]),
+            child: Divider(color: Colors.grey[400]),
           ),
           _buildCardContent(context),
         ],
@@ -46,12 +52,67 @@ class LoanStatsCard extends StatelessWidget {
           AsyncSnapshot<LoanCalculationSplitsWithStats> snapshot) {
         if (snapshot.data == null) return Text('loading...');
 
-        return SizedBox(
-          height: 250.0,
-          // width: 200.0,
-          child: LoanStatsPieChart(loanSplits: snapshot.data),
-        );
+        return _buildStats(context, snapshot.data);
       },
+    );
+  }
+
+  Column _buildStatHeaderNumbers(Color color, String number, String text) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          number,
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStats(
+      BuildContext context, LoanCalculationSplitsWithStats stats) {
+    Widget _buildStatHeader = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        _buildStatHeaderNumbers(
+          negativeColor,
+          stats.stats.interest.toStringAsFixed(0),
+          'INTEREST',
+        ),
+        _buildStatHeaderNumbers(
+          positiveColor,
+          stats.stats.total.toStringAsFixed(0),
+          'TOTAL',
+        ),
+      ],
+    );
+    Widget _buildStatChart = SizedBox(
+      height: 250.0,
+      // width: 200.0,
+      child: LoanStatsPieChart(
+        loanSplits: stats,
+        positiveColor: positiveColor,
+        negativeColor: negativeColor,
+      ),
+    );
+
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[_buildStatHeader, _buildStatChart],
+      ),
     );
   }
 }

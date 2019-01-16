@@ -8,7 +8,13 @@ import './loan_emi_bar_chart.dart';
 class LoanEmiCard extends StatelessWidget {
   final bool computed;
   final LoanItemSplitsBloc loanSplitsBloc;
-  LoanEmiCard({this.computed = false, this.loanSplitsBloc});
+  final Color positiveColor, negativeColor;
+  LoanEmiCard({
+    this.computed = false,
+    this.loanSplitsBloc,
+    this.positiveColor = Colors.green,
+    this.negativeColor = Colors.orange,
+  });
 
   @override
   Widget build(BuildContext context) {

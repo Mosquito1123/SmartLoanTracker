@@ -18,28 +18,22 @@ class DashboardPage extends StatelessWidget {
         title: Text('Dashboard'),
       ),
       // body: LoanStatsComputedDonutChart.withSampleData(),
-      body: StreamBuilder(
-          stream: bloc.currentLoanItem,
-          builder: (BuildContext context, AsyncSnapshot<LoanItem> snapshot) {
-            if (snapshot.data == null) return Text('loading...');
-            loanSplitsBloc = LoanItemSplitsBloc(loanItemsBloc: bloc);
-            return LoanStatsCard(
-              loanSplitsBloc: loanSplitsBloc,
-              computed: false,
-            );
-            // return LoanEmiCard(
-            //   loanSplitsBloc: loanSplitsBloc,
-            //   computed: true,
-            // );
-          }),
-
-      // ListView(
-      //   children: <Widget>[
-      //     // LoanStatsComputedDonutChart.withSampleData(),
-      //     // EmiComputedStackedBarChart.withSampleData(),
-      //     Text('test'),
-      //   ],
-      // ),
+      body: Container(
+        child: StreamBuilder(
+            stream: bloc.currentLoanItem,
+            builder: (BuildContext context, AsyncSnapshot<LoanItem> snapshot) {
+              if (snapshot.data == null) return Text('loading...');
+              loanSplitsBloc = LoanItemSplitsBloc(loanItemsBloc: bloc);
+              // return LoanStatsCard(
+              //   loanSplitsBloc: loanSplitsBloc,
+              //   computed: true,
+              // );
+              return LoanEmiCard(
+                loanSplitsBloc: loanSplitsBloc,
+                computed: true,
+              );
+            }),
+      ),
       drawer: SideDrawer(),
     );
   }

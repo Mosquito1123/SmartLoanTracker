@@ -6,11 +6,17 @@ import '../shared/loan_calculations.dart';
 
 class LoanEmiBarChart extends StatelessWidget {
   final List<LoanCalculationSplit> loanSplits;
+  final Color positiveColor, negativeColor;
 
   List<charts.Series> _seriesList;
   final bool animate;
 
-  LoanEmiBarChart({this.loanSplits, this.animate = true}) {
+  LoanEmiBarChart({
+    this.loanSplits,
+    this.animate = true,
+    this.positiveColor = Colors.green,
+    this.negativeColor = Colors.orange,
+  }) {
     _seriesList = buildData();
   }
 
@@ -21,16 +27,18 @@ class LoanEmiBarChart extends StatelessWidget {
         domainFn: (LoanCalculationSplit split, _) => split.date.year.toString(),
         measureFn: (LoanCalculationSplit split, _) => split.interest,
         data: loanSplits,
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(negativeColor),
+        fillColorFn: (_, __) =>
+            charts.ColorUtil.fromDartColor(negativeColor).lighter,
       ),
       charts.Series<LoanCalculationSplit, String>(
         id: 'Principle',
         domainFn: (LoanCalculationSplit split, _) => split.date.year.toString(),
         measureFn: (LoanCalculationSplit split, _) => split.principle,
         data: loanSplits,
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(positiveColor),
         fillColorFn: (_, __) =>
-            charts.MaterialPalette.blue.shadeDefault.lighter,
+            charts.ColorUtil.fromDartColor(positiveColor).lighter,
       ),
     ];
   }
