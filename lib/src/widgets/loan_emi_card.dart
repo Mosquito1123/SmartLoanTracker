@@ -30,15 +30,20 @@ class LoanEmiCard extends StatelessWidget {
       style: Theme.of(context).textTheme.title,
     );
     return Card(
-      child: Column(
-        children: <Widget>[
-          _buildTitle,
-          Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Divider(color: Colors.grey[300]),
-          ),
-          _buildCardContent(context),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _buildTitle,
+            SizedBox(height: 8.0),
+            Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              child: Divider(color: Colors.grey[800]),
+            ),
+            _buildCardContent(context),
+          ],
+        ),
       ),
     );
   }
@@ -55,7 +60,11 @@ class LoanEmiCard extends StatelessWidget {
         return SizedBox(
           height: 250.0,
           // width: 200.0,
-          child: LoanEmiBarChart(loanSplits: snapshot.data),
+          child: LoanEmiBarChart(
+            loanSplits: snapshot.data,
+            positiveColor: positiveColor,
+            negativeColor: negativeColor,
+          ),
         );
       },
     );

@@ -30,15 +30,19 @@ class LoanStatsCard extends StatelessWidget {
       style: Theme.of(context).textTheme.title,
     );
     return Card(
-      child: Column(
-        children: <Widget>[
-          _buildTitle,
-          Padding(
-            padding: EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Divider(color: Colors.grey[400]),
-          ),
-          _buildCardContent(context),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            _buildTitle,
+            SizedBox(height: 8.0),
+            Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              child: Divider(color: Colors.grey[800]),
+            ),
+            _buildCardContent(context),
+          ],
+        ),
       ),
     );
   }

@@ -18,7 +18,10 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'LoanTracker',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.green,
+            primaryColor: Color.fromARGB(255, 0, 164, 159),
+            accentColor: Color.fromARGB(255, 240, 128, 66),
+            fontFamily: 'Roboto',
           ),
           // home: LoansListPage(),
           routes: {

@@ -24,13 +24,21 @@ class DashboardPage extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<LoanItem> snapshot) {
               if (snapshot.data == null) return Text('loading...');
               loanSplitsBloc = LoanItemSplitsBloc(loanItemsBloc: bloc);
-              // return LoanStatsCard(
-              //   loanSplitsBloc: loanSplitsBloc,
-              //   computed: true,
-              // );
-              return LoanEmiCard(
-                loanSplitsBloc: loanSplitsBloc,
-                computed: true,
+              return ListView(
+                children: <Widget>[
+                  LoanStatsCard(
+                    loanSplitsBloc: loanSplitsBloc,
+                    computed: true,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                  LoanEmiCard(
+                    loanSplitsBloc: loanSplitsBloc,
+                    computed: true,
+                    positiveColor: Theme.of(context).primaryColor,
+                    negativeColor: Theme.of(context).accentColor,
+                  ),
+                ],
               );
             }),
       ),
