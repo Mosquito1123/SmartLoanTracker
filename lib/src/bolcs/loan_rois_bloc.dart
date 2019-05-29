@@ -19,6 +19,7 @@ class LoanRoisBloc implements BlocBase {
       .collection('loans')
       .document(loanItem.reference.documentID)
       .collection('rois')
+      .orderBy('startDate', descending: true)
       .snapshots()
       .map((snapshot) => snapshot.documents
           .map((DocumentSnapshot document) => LoanRoi.fromDocSnapshot(document))

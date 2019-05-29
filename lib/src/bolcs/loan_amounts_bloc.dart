@@ -20,6 +20,7 @@ class LoanAmountsBloc implements BlocBase {
       .collection('loans')
       .document(loanItem.reference.documentID)
       .collection('amounts')
+      .orderBy('date', descending: true)
       .snapshots()
       .map((snapshot) => snapshot.documents
           .map((DocumentSnapshot document) =>
