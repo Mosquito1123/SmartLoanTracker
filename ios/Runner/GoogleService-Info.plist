@@ -2,39 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>367740545857-sb3n6l5eishvq1f36uo19816d6dat073.apps.googleusercontent.com</string>
+	<string>686260316230-l7lu59qfgp942p67l2hjpb58lukbul1e.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.367740545857-sb3n6l5eishvq1f36uo19816d6dat073</string>
+	<string>com.googleusercontent.apps.686260316230-l7lu59qfgp942p67l2hjpb58lukbul1e</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCK_Vxx2eezXJJ0zSJBYg1l_vcDeliTMt4</string>
+	<string>AIzaSyCZYEuU-JorBEPJJId_rMcStrN2dtCt6EI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>367740545857</string>
+	<string>686260316230</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.har.loanTrackerFlt.ios</string>
+	<string>SmartLoanTracker</string>
 	<key>PROJECT_ID</key>
-	<string>hfirestore</string>
+	<string>recipes-7f74e</string>
 	<key>STORAGE_BUCKET</key>
-	<string>hfirestore.appspot.com</string>
+	<string>recipes-7f74e.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:367740545857:ios:2fc0655f2b55716c</string>
+	<string>1:686260316230:ios:276a1a5cd832155a</string>
 	<key>DATABASE_URL</key>
-	<string>https://hfirestore.firebaseio.com</string>
+	<string>https://recipes-7f74e.firebaseio.com</string>
 </dict>
 </plist>
