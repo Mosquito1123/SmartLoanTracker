@@ -16,9 +16,10 @@ class MyApp extends StatelessWidget {
       child: BlocProvider(
         bloc: LoanItemsBloc(),
         child: MaterialApp(
-          title: 'LoanTracker',
+          debugShowCheckedModeBanner: false,
+          title: 'SmartLoanTracker',
           theme: ThemeData(
-            primarySwatch: Colors.green,
+            primarySwatch: Colors.blueGrey,
             primaryColor: Color.fromARGB(255, 0, 164, 159),
             accentColor: Color.fromARGB(255, 240, 128, 66),
             fontFamily: 'Roboto',

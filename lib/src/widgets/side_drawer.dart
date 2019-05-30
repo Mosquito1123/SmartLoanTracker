@@ -14,7 +14,7 @@ class SideDrawer extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 DrawerHeader(
-                  child: Text('LoanTracker'),
+                  child: Text('SmartLoanTracker'),
                 ),
                 ListTile(
                   selected: menuSelection.data == 1,

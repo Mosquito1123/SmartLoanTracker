@@ -10,7 +10,7 @@ class LoansListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LoanTracker'),
+        title: Text('SmartLoanTracker'),
       ),
       body: LoanList(),
       drawer: SideDrawer(),
